@@ -14,10 +14,38 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="responsive.css">
+    <!-- diff2html jsdiff -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.1.0/diff.min.js" integrity="sha512-vco9RAxEuv4PQ+iTQyuKElwoUOcsVdp+WgU6Lgo82ASpDfF7vI66LlWz+CZc2lMdn52tjjLOuHvy8BQJFp8a1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/styles/github.min.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css"
+    />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
     <title>CodeLens - Visual Code Comparison Tool</title>
 </head>
 
 <body>
+    
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Share your Code</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="exitModal"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+             <img src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1262.gif" alt="" srcset="" width="500" id="loadergif">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal">Close</button>
+              <button type="button" class="btn btn-primary" id="copyLinkBtn">📋 Copy Link</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <header class="navbar navbar-expand-lg bs-dark home-one-header" id="main-navbar">
         <div class="container-fluid">
             <a href="/" class="navbar-brand">
@@ -100,41 +128,41 @@
                             <div class="form-group">
                                 <pre>
                                     <code>
-                                        <textarea class="form-control" id="originalCode" rows="10"></textarea required>
+                                        <textarea class="form-control" id="userOriginalCode" rows="10"></textarea required>
                                     </code>
                                 </pre>
                             </div>
                         </div>
                         <div class="stats">
-                            <span class="lines">Lines : <span class="lineCount" id="lc1">0</span></span>
-                            <span class="characters">Characters : <span class="charCount" id="cc1">0</span></span>
-                            <span class="requests-left">Requests Left: <span id="requests-remaining">10</span></span>
+                            <span class="lines">Lines : <span class="lineCount org-lines" id="lc1">0</span></span>
+                            <span class="characters">Characters : <span class="charCount  org-chars" id="cc1">0</span></span>
+                            <span class="requests-left">Requests Left: <span class="requests-remaining">10</span></span>
                         </div>
                     </div>
                     <div class="home-two-code-right container">
-                        <h3>New Code</h3>
+                        <h3>Your Code</h3>
                         <div class="home-two-code-left-input">
                             <div class="form-group">
                                 <pre>
                                     <code>
-                                        <textarea class="form-control" id="newCode" rows="10"></textarea required>
+                                        <textarea class="form-control" id="userNewCode" rows="10"></textarea required>
                                     </code>
                                 </pre>
                             </div>
                         </div>
                         <div class="stats">
-                            <span class="lines">Lines : <span class="lineCount" id="lc2">0</span></span>
-                            <span class="characters">Characters : <span class="charCount" id="cc2">0</span></span>
-                            <span class="requests-left">Requests Left: <span id="requests-remaining">10</span></span>
+                            <span class="lines">Lines : <span class="lineCount new-lines" id="lc2">0</span></span>
+                            <span class="characters">Characters : <span class="charCount  new-chars" id="cc2">0</span></span>
+                            <span class="requests-left">Requests Left: <span class="requests-remaining">10</span></span>
                         </div>
                     </div>
                 </div>
                 
-                <button type="button" class="btn btn-lg btn-primary custom-btn">Start</button>
+                <button type="button" class="btn btn-lg btn-primary custom-btn" id="startCodeCompare-btn">Start</button>
             </div>
         </section>
 
-        <section class="home-three container">
+        <section class="home-three container" style="display: none;">
             <div class="home-three-wrapper">
                 <h2>Code Insights</h2>
                 <div class="home-three-first">
@@ -143,48 +171,49 @@
                 </div>
 
                 <div class="home-three-second">
-                    <div class="home-two-code container">
+                    <code id="diff-org"></code>
+                    <!-- <div class="home-two-code container">
                         <div class="home-two-code-left container">
-                            <h3>Original Code</h3>
+                            <h3>Original Code Differences</h3>
                             <div class="home-two-code-left-input">
                                 <div class="form-group">
                                     <pre>
                                         <code>
-                                            <textarea class="form-control" id="originalCode" rows="10"></textarea required>
+                                            <textarea class="form-control" id="responseOriginalCode" rows="10"></textarea required>
                                         </code>
                                     </pre>
                                 </div>
                             </div>
                             <div class="stats">
-                                <span class="lines">Lines : <span class="lineCount" id="lc1">0</span></span>
-                                <span class="characters">Characters : <span class="charCount" id="cc1">0</span></span>
-                                <span class="requests-left">Requests Left: <span id="requests-remaining">10</span></span>
+                                <span class="lines">Lines : <span class="lineCount org-lines" id="lc1">0</span></span>
+                                <span class="characters">Characters : <span class="charCount org-chars" id="cc1">0</span></span>
+                                <span class="requests-left">Requests Left: <span class="requests-remaining">10</span></span>
                             </div>
                         </div>
                         <div class="home-two-code-right container">
-                            <h3>New Code</h3>
+                            <h3>Your Code Differences</h3>
                             <div class="home-two-code-left-input">
                                 <div class="form-group">
                                     <pre>
                                         <code>
-                                            <textarea class="form-control" id="newCode" rows="10"></textarea required>
+                                            <textarea class="form-control" id="responseNewCode" rows="10"></textarea required>
                                         </code>
                                     </pre>
                                 </div>
                             </div>
                             <div class="stats">
-                                <span class="lines">Lines : <span class="lineCount" id="lc2">0</span></span>
-                                <span class="characters">Characters : <span class="charCount" id="cc2">0</span></span>
-                                <span class="requests-left">Requests Left: <span id="requests-remaining">10</span></span>
+                                <span class="lines">Lines : <span class="lineCount  new-lines" id="lc2">0</span></span>
+                                <span class="characters">Characters : <span class="charCount  new-chars" id="cc2">0</span></span>
+                                <span class="requests-left">Requests Left: <span class="requests-remaining">10</span></span>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- <button type="button" class="btn btn-lg btn-primary custom-btn">Start</button> -->
                 </div>
-                <div class="buttons">
-                    <button type="button" class="btn btn-lg btn-primary custom-btn">Save</button>
-                    <button type="button" class="btn btn-lg btn-primary custom-btn">Share</button>
-                </div>
+                <!-- <div class="buttons"> -->
+                    <!-- <button type="button" class="btn btn-lg btn-primary custom-btn">Save</button> -->
+                    <!-- <button type="button" class="btn btn-lg btn-primary custom-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="shareBtn">Share</button> -->
+                <!-- </div> -->
             </div>
         </section>
     </main>
