@@ -1,18 +1,17 @@
 import uvicorn
 import json
-import socket
 import uuid
 import datetime
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, Form, Query, Request, File, UploadFile, Response
-from slowapi.errors import RateLimitExceeded
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
-hostname = socket.gethostname()
+limiter = Limiter(key_func=get_remote_address, headers_enabled=True, in_memory_fallback_enabled=True)
 
-app = FastAPI()
+app = FastAPI(ocs_url=None, redoc_url=None,)
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,18 +21,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-limiter = Limiter(key_func=get_remote_address, headers_enabled=True, in_memory_fallback_enabled=True)
-
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 @app.get("/")
-@limiter.limit("500/minute")
+@limiter.limit("5/minute")
 async def root(request: Request):
-    return {"status": "Server is alive ❤ ( ´･･)ﾉ(._.`)",
+    response_data = {"status": "Server is alive ❤ ( ´･･)ﾉ(._.`)",
             "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "host-name": hostname,
             "IP": get_remote_address(request)}
+    return Response("Server Alive")
 
 @app.post("/compare")
 @limiter.limit("10/day")
@@ -273,4 +270,4 @@ async def upload_files(request: Request, file1: UploadFile = File(...), file2: U
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
