@@ -4,6 +4,7 @@ import uuid
 import datetime
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.encoders import jsonable_encoder
 from fastapi import FastAPI, HTTPException, Form, Query, Request, File, UploadFile, Response
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -11,7 +12,7 @@ from slowapi.errors import RateLimitExceeded
 
 limiter = Limiter(key_func=get_remote_address, headers_enabled=True, in_memory_fallback_enabled=True)
 
-app = FastAPI(ocs_url=None, redoc_url=None,)
+app = FastAPI(docs_url=None, redoc_url=None,)
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,12 +26,14 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 @app.get("/")
-@limiter.limit("5/minute")
+@limiter.limit("5000/minute")
 async def root(request: Request):
     response_data = {"status": "Server is alive ❤ ( ´･･)ﾉ(._.`)",
             "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "IP": get_remote_address(request)}
-    return Response("Server Alive")
+    
+    json_compatible_item_data = jsonable_encoder(response_data)
+    return JSONResponse(content=json_compatible_item_data)
 
 @app.post("/compare")
 @limiter.limit("10/day")
@@ -67,7 +70,8 @@ async def compare_code( request: Request, code1: str, code2: str):
             "diff_result": diff_result,  # Include the unified diff result in the response
         }
 
-        return response_data
+        json_compatible_item_data = jsonable_encoder(response_data)
+        return JSONResponse(content=json_compatible_item_data)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -83,7 +87,8 @@ def format_code(request: Request,code: str):
         # Prepare response
         response_data = {"formatted_code": formatted_code}
 
-        return response_data
+        json_compatible_item_data = jsonable_encoder(response_data)
+        return JSONResponse(content=json_compatible_item_data)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -251,23 +256,23 @@ def extract_code_from_file(file: UploadFile) -> str:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error extracting code from file: {str(e)}")
 
-@app.post("/upload")
-async def upload_files(request: Request, file1: UploadFile = File(...), file2: UploadFile = File(...)):
-    try:
-        # Extract code from the uploaded files
-        code1 = extract_code_from_file(file1)
-        code2 = extract_code_from_file(file2)
+# @app.post("/upload")
+# async def upload_files(request: Request, file1: UploadFile = File(...), file2: UploadFile = File(...)):
+#     try:
+#         # Extract code from the uploaded files
+#         code1 = extract_code_from_file(file1)
+#         code2 = extract_code_from_file(file2)
 
-        # Prepare response
-        response_data = {
-            "code1": code1,
-            "code2": code2
-        }
+#         # Prepare response
+#         response_data = {
+#             "code1": code1,
+#             "code2": code2
+#         }
 
-        return response_data
+#         return response_data
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8080)
