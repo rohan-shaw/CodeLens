@@ -5,6 +5,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="apple-touch-icon" sizes="180x180" href="asset/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="asset/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="asset/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="asset/favicon_io/site.webmanifest">
+    <meta name="description" content="CodeLens simplifies comparing code. Add code, see differences visually, and analyze changes effortlessly. Try our free visual code comparison tool!">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="CodeLens: Compare Code Side-by-Side - Visually & Effortlessly">
+    <meta property="og:description" content="CodeLens simplifies comparing code. Upload your files, see differences visually, and analyze changes effortlessly. Try our free visual code comparison tool!">
+    <meta property="og:url" content="https://codelens.lumaticai.com"> 
+    <meta property="og:image" content="https://codelens.lumaticai.com/asset/logo.png"> 
+    <meta name="googlebot" content="index,follow">
+    <meta property="og:type" content="website">
+    <meta name="keywords" content="code comparison tool, visual code diff, side-by-side code comparison, developer code tools, programmer comparison tool, visual diff software, git merge conflict resolution, code review tool, compare source code, fast code comparison, accurate code diff, side-by-side code viewer, developer productivity tool, programmer efficiency tools, visual diff for github, git merge conflict solver, code review with visual diff, compare source code changes">
+        
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -38,15 +52,15 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Share your Code</h1>
+              <h1 class="modal-title fs-5 text-center" id="exampleModalLabel" style="text-align: center;">Rate Limit Excedeed (429)</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="exitModal"></button>
             </div>
             <div class="modal-body d-flex justify-content-center">
-             <img src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1262.gif" alt="" srcset="" width="500" id="loadergif">
+             <img src="https://data.textstudio.com/output/sample/animated/8/9/8/2/429-20-12898.gif" alt="Loading Gif" width="500" id="loadergif">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal">Close</button>
-              <button type="button" class="btn btn-primary" id="copyLinkBtn">📋 Copy Link</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="closeModal">Close</button>
+              <!-- <button type="button" class="btn btn-primary" id="copyLinkBtn">📋 Copy Link</button> -->
             </div>
           </div>
         </div>
@@ -55,7 +69,7 @@
     <header class="navbar navbar-expand-lg bs-dark home-one-header" id="main-navbar">
         <div class="container-fluid">
             <a href="/" class="navbar-brand">
-                <span class="logo"><span class="logo-one">Code<span class="logoSpan">Lens</span></span>
+                <span class="logo"><span class="logo-one">Code<span class="logoSpan lgexp">Lens</span></span>
                 <span class="logoSpan-Bottom">by <img src="https://lumaticai.com/wp-content/uploads/2023/04/20230815_223850-e1692123614628.png" alt="LumaticAI Logo"/></span>
                 </span>
             </a>
@@ -96,7 +110,7 @@
             <div class="container home-one-top">
                 <div class="container home-one-left">
                     <h1>Code<span class="logoSpan">Lens</span></h1>
-                    <p>Spot differences, find similarities, and unlock code insights with <b>Code<span class="logoSpan">Lens</span></b>.</p>
+                    <p>Spot differences, compare code, and unlock code insights with <b>Code<span class="logoSpan">Lens</span></b>.</p>
                 </div>
                 <div class="container home-one-right">
                     <picture>
@@ -124,7 +138,7 @@
             <div class="home-two-wrapper">
                 <div class="home-two-main">
                     <h2>Compare Code Files and Identify Differences</h2>
-                    <p>Paste your code snippets below and click Start to compare them.</p>
+                    <p>Paste your code snippets below and click Start to compare code.</p>
                 </div>
     
                 <div class="home-two-code container">
@@ -142,7 +156,7 @@
                         <div class="stats">
                             <span class="lines">Lines : <span class="lineCount org-lines" id="lc1">0</span></span>
                             <span class="characters">Characters : <span class="charCount  org-chars" id="cc1">0</span></span>
-                            <span class="requests-left">Requests Left: <span class="requests-remaining">10</span></span>
+                            <!-- <span class="requests-left">Requests Left: <span class="requests-remaining">10</span></span> -->
                         </div>
                     </div>
                     <div class="home-two-code-right container">
@@ -159,7 +173,7 @@
                         <div class="stats">
                             <span class="lines">Lines : <span class="lineCount new-lines" id="lc2">0</span></span>
                             <span class="characters">Characters : <span class="charCount  new-chars" id="cc2">0</span></span>
-                            <span class="requests-left">Requests Left: <span class="requests-remaining">10</span></span>
+                            <!-- <span class="requests-left">Requests Left: <span class="requests-remaining">10</span></span> -->
                         </div>
                     </div>
                 </div>
@@ -218,7 +232,7 @@
                 </div>
                 <!-- <div class="buttons"> -->
                     <!-- <button type="button" class="btn btn-lg btn-primary custom-btn">Save</button> -->
-                    <!-- <button type="button" class="btn btn-lg btn-primary custom-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="shareBtn">Share</button> -->
+                    <button type="button" class="btn btn-lg btn-primary custom-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" id="shareBtn" style="display: none;">Share</button>
                 <!-- </div> -->
             </div>
         </section>
@@ -227,6 +241,33 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script src="script.js"></script>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "CodeLens - Visual Code Comparison Tool",
+          "image": "https://codelens.lumaticai.com/asset/logo.png",
+          "description": "CodeLens simplifies comparing code. Upload your files, see differences visually, and analyze changes effortlessly.",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "bestRating": "5",
+            "ratingCount": "123"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0"
+          },
+          "operatingSystem": [
+            "Windows",
+            "Linux",
+            "macOS"
+          ],
+          "applicationCategory": "DeveloperTool",
+          "fileFormat": "text/plain",
+          "featureList": "Visual code comparison, Side-by-side view, Code highlighting, Merge conflict resolution"
+        }
+    </script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script> -->
 </body>
 
