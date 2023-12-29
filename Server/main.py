@@ -36,7 +36,7 @@ async def root(request: Request):
     return JSONResponse(content=json_compatible_item_data)
 
 @app.post("/compare")
-@limiter.limit("10/day")
+@limiter.limit("50/day")
 async def compare_code( request: Request, code1: str, code2: str):
     try:
         import difflib
@@ -145,7 +145,7 @@ def save_code_pair(
         saved_code_pairs.append(new_code_pair)
 
         # Return success response
-        response_data = {"success": True, "message": f"Code pair with ID {pair_id} saved successfully"}
+        response_data = {"id": pair_id}
 
         # Update browser storage with the new data
         serialized_code_pairs = [pair.to_dict() for pair in saved_code_pairs]
