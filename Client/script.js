@@ -85,7 +85,7 @@ function compareCode() {
     if (xhr.readyState == 4) {
       // Check if the request was successful (status code 200)
       if (xhr.status == 200) {
-        const rateLimitHeaders = xhr.getResponseHeader("X-RateLimit-Limit");
+        // const rateLimitHeaders = xhr.getResponseHeader("X-RateLimit-Limit");
         console.log(rateLimitHeaders);
         // Parse the JSON response, if applicable
         var jsonResponse = JSON.parse(xhr.responseText);
@@ -223,3 +223,10 @@ userModifiedCodeTextArea.addEventListener("input", () => {
   document.querySelector(".new-lines").innerText = lines;
   document.querySelector(".new-chars").innerText = chars;
 });
+
+// Adding highlight.js
+startCompareBtn.addEventListener('click', ()=>{
+  document.querySelectorAll('textarea').forEach((el)=>{
+    hljs.highlightElement(el);
+  })
+})
